@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+         https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.2.5</version>
+        <relativePath/>
+    </parent>
+
+    <groupId>com.shopsphere</groupId>
+    <artifactId>shopsphere-parent</artifactId>
+    <version>1.0.0</version>
+    <packaging>pom</packaging>
+    <name>ShopSphere Parent</name>
+    <description>Multi-module parent POM for ShopSphere e-commerce platform</description>
+
+    <modules>
+        <module>shopsphere-common</module>
+        <module>eureka-server</module>
+        <module>config-server</module>
+        <module>api-gateway</module>
+        <module>auth-service</module>
+        <module>catalog-service</module>
+        <module>order-service</module>
+        <module>admin-service</module>
+        <module>coverage-report</module>
+    </modules>
+
+    <properties>
+        <java.version>17</java.version>
+        <spring-cloud.version>2023.0.1</spring-cloud.version>
+        <jjwt.version>0.12.3</jjwt.version>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <jacoco.version>0.8.11</jacoco.version>
+
+        <sonar.host.url>http://localhost:9000</sonar.host.url>
+        <sonar.projectKey>shopsphere</sonar.projectKey>
+        <sonar.projectName>ShopSphere</sonar.projectName>
+        <sonar.exclusions>
+            **/eureka-server/**,
+            **/config-server/**,
+            **/dto/**,
+            **/entity/**,
+            **/model/**,
+            **/config/**,
+            **/security/**,
+            **/event/**,
+            **/feign/**,
+            **/controller/**,
+            **/repository/**,
+            **/*Application.java,
+            **/exception/**,
+            **/util/**,
+            **/constants/**,
+            **/*EventConsumer.java,
+            **/*Consumer.java,
+            **/*EventPublisher.java,
+            **/*Publisher.java,
+            **/*Listener.java
+        </sonar.exclusions>
+
+        <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
+        <sonar.coverage.jacoco.xmlReportPaths>
+            ${maven.multiModuleProjectDirectory}/coverage-report/target/site/jacoco-aggregate/jacoco.xml
+        </sonar.coverage.jacoco.xmlReportPaths>
+        <sonar.coverage.exclusions>
+            **/dto/**,
+            **/entity/**,
+            **/model/**,
+            **/config/**,
+            **/security/**,
+            **/event/**,
+            **/feign/**,
+            **/controller/**,
+            **/repository/**,
+            **/*Application.java,
+            **/*EventConsumer.java,
+            **/*Consumer.java,
+            **/*EventPublisher.java,
+            **/*Publisher.java,
+            **/*Listener.java
+        </sonar.coverage.exclusions>
+
+        <sonar.cpd.exclusions>
+            **/dto/**,
+            **/entity/**,
+            **/model/**
+        </sonar.cpd.exclusions>
+
+        <sonar.issue.ignore.multicriteria>e1,e2,e3</sonar.issue.ignore.multicriteria>
+        
+        <sonar.issue.ignore.multicriteria.e1.ruleKey>java:S6204</sonar.issue.ignore.multicriteria.e1.ruleKey>
+        <sonar.issue.ignore.multicriteria.e1.resourceKey>**/*.java</sonar.issue.ignore.multicriteria.e1.resourceKey>
+        
+        <sonar.issue.ignore.multicriteria.e2.ruleKey>java:S5838</sonar.issue.ignore.multicriteria.e2.ruleKey>
+        <sonar.issue.ignore.multicriteria.e2.resourceKey>**/*Test.java</sonar.issue.ignore.multicriteria.e2.resourceKey>
+
+        <sonar.issue.ignore.multicriteria.e3.ruleKey>java:S5778</sonar.issue.ignore.multicriteria.e3.ruleKey>
+        <sonar.issue.ignore.multicriteria.e3.resourceKey>**/*Test.java</sonar.issue.ignore.multicriteria.e3.resourceKey>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.shopsphere</groupId>
+                <artifactId>shopsphere-common</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-api</artifactId>
+                <version>${jjwt.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-impl</artifactId>
+                <version>${jjwt.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-jackson</artifactId>
+                <version>${jjwt.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+            <dependency>
+                <groupId>io.github.resilience4j</groupId>
+                <artifactId>resilience4j-spring-boot3</artifactId>
+                <version>2.2.0</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springdoc</groupId>
+                <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+                <version>2.3.0</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.jacoco</groupId>
+                    <artifactId>jacoco-maven-plugin</artifactId>
+                    <version>${jacoco.version}</version>
+                    <executions>
+                        <execution>
+                            <id>prepare-agent</id>
+                            <goals>
+                                <goal>prepare-agent</goal>
+                            </goals>
+                        </execution>
+                        <execution>
+                            <id>report</id>
+                            <phase>verify</phase>
+                            <goals>
+                                <goal>report</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <excludes>
+                            <exclude>**/*$*Builder.class</exclude>
+                            <exclude>**/dto/**</exclude>
+                            <exclude>**/entity/**</exclude>
+                            <exclude>**/model/**</exclude>
+                            <exclude>**/config/**</exclude>
+                            <exclude>**/security/**</exclude>
+                            <exclude>**/event/**</exclude>
+                            <exclude>**/controller/**</exclude>
+                            <exclude>**/feign/**</exclude>
+                            <exclude>**/*Application.class</exclude>
+                            <exclude>**/repository/**</exclude>
+                            <exclude>**/*EventConsumer.class</exclude>
+                            <exclude>**/*Consumer.class</exclude>
+                            <exclude>**/*EventPublisher.class</exclude>
+                            <exclude>**/*Publisher.class</exclude>
+                            <exclude>**/*Listener.class</exclude>
+                        </excludes>
+                    </configuration>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>3.1.2</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.sonarsource.scanner.maven</groupId>
+                    <artifactId>sonar-maven-plugin</artifactId>
+                    <version>3.11.0.3922</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+</project>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                             http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.shopsphere</groupId>
+        <artifactId>shopsphere-parent</artifactId>
+        <version>1.0.0</version>
+    </parent>
+
+    <artifactId>coverage-report</artifactId>
+    <packaging>pom</packaging>
+
+    <name>Coverage Report Aggregator</name>
+    <description>Aggregates JaCoCo coverage reports from all service modules for SonarQube analysis</description>
+
+    <dependencies>
+        <!-- Include all service modules to aggregate their coverage -->
+        <dependency>
+            <groupId>com.shopsphere</groupId>
+            <artifactId>admin-service</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.shopsphere</groupId>
+            <artifactId>auth-service</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.shopsphere</groupId>
+            <artifactId>catalog-service</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.shopsphere</groupId>
+            <artifactId>order-service</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!-- JaCoCo plugin for aggregating coverage reports -->
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco.version}</version>
+                <executions>
+                    <execution>
+                        <id>report-aggregate</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>report-aggregate</goal>
+                        </goals>
+                        <configuration>
+                            <dataFileIncludes>
+                                <dataFileInclude>**/jacoco.exec</dataFileInclude>
+                            </dataFileIncludes>
+                            <outputDirectory>${project.reporting.outputDirectory}/jacoco-aggregate</outputDirectory>
+                            <excludes>
+                                <!-- Exclude infrastructure code from coverage report -->
+                                <exclude>**/*$*Builder.class</exclude>
+                                <exclude>**/dto/**</exclude>
+                                <exclude>**/entity/**</exclude>
+                                <exclude>**/model/**</exclude>
+                                <exclude>**/config/**</exclude>
+                                <exclude>**/security/**</exclude>
+                                <exclude>**/event/**</exclude>
+                                <exclude>**/controller/**</exclude>
+                                <exclude>**/feign/**</exclude>
+                                <exclude>**/*Application.class</exclude>
+                                <exclude>**/repository/**</exclude>
+                                <exclude>**/*EventConsumer.class</exclude>
+                                <exclude>**/*Consumer.class</exclude>
+                                <exclude>**/*EventPublisher.class</exclude>
+                                <exclude>**/*Publisher.class</exclude>
+                                <exclude>**/*Listener.class</exclude>
+                            </excludes>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
