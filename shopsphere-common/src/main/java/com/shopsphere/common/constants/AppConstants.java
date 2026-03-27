@@ -17,6 +17,7 @@ public class AppConstants {
     // Gateway headers forwarded to downstream services
     public static final String HEADER_USER_ID   = "X-User-Id";
     public static final String HEADER_USER_ROLE = "X-User-Role";
+    public static final String HEADER_USER_EMAIL = "X-User-Email";
 
     // JWT
     public static final String TOKEN_PREFIX = "Bearer ";

@@ -147,10 +147,49 @@
             </dependency>
 
             <dependency>
+<<<<<<< HEAD
+=======
+                <groupId>org.springframework.security</groupId>
+                <artifactId>spring-security-test</artifactId>
+                <version>6.2.4</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+>>>>>>> 0a1129c (Complete Project)
                 <groupId>org.springdoc</groupId>
                 <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
                 <version>2.3.0</version>
             </dependency>
+<<<<<<< HEAD
+=======
+
+            <!-- OpenFeign -->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-openfeign</artifactId>
+                <version>4.1.0</version>
+            </dependency>
+
+            <!-- Tracing (Zipkin) -->
+            <dependency>
+                <groupId>io.micrometer</groupId>
+                <artifactId>micrometer-tracing-bridge-brave</artifactId>
+                <version>1.2.5</version>
+            </dependency>
+            <dependency>
+                <groupId>io.zipkin.reporter2</groupId>
+                <artifactId>zipkin-reporter-brave</artifactId>
+                <version>2.17.1</version>
+            </dependency>
+
+            <!-- Loki Logging -->
+            <dependency>
+                <groupId>com.github.loki4j</groupId>
+                <artifactId>loki-logback-appender</artifactId>
+                <version>1.5.0</version>
+            </dependency>
+>>>>>>> 0a1129c (Complete Project)
         </dependencies>
     </dependencyManagement>
 

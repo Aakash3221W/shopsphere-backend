@@ -118,9 +118,14 @@
         </dependency>
 
         <dependency>
+<<<<<<< HEAD
             <groupId>net.logstash.logback</groupId>
             <artifactId>logstash-logback-encoder</artifactId>
             <version>7.4</version>
+=======
+            <groupId>com.github.loki4j</groupId>
+            <artifactId>loki-logback-appender</artifactId>
+>>>>>>> 0a1129c (Complete Project)
         </dependency>
 
     </dependencies>

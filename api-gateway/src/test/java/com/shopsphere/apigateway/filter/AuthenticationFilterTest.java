@@ -56,6 +56,24 @@ class AuthenticationFilterTest {
     }
 
     @Test
+<<<<<<< HEAD
+=======
+    @DisplayName("Public catalog product detail path passes through without authentication")
+    void filter_publicCatalogProductDetail_passesThrough() {
+        MockServerHttpRequest request = MockServerHttpRequest.get("/gateway/catalog/products/42").build();
+        MockServerWebExchange exchange = MockServerWebExchange.from(request);
+
+        when(filterChain.filter(exchange)).thenReturn(Mono.empty());
+
+        StepVerifier.create(authenticationFilter.filter(exchange, filterChain))
+                .verifyComplete();
+
+        verify(filterChain).filter(exchange);
+        verifyNoInteractions(jwtUtil);
+    }
+
+    @Test
+>>>>>>> 0a1129c (Complete Project)
     @DisplayName("Missing Authorization header returns 401")
     void filter_missingAuthHeader_returns401() {
         MockServerHttpRequest request = MockServerHttpRequest.get("/gateway/orders/create").build();
@@ -136,4 +154,8 @@ class AuthenticationFilterTest {
         assertThat(exchange.getResponse().getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
         verify(filterChain, never()).filter(any());
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 0a1129c (Complete Project)

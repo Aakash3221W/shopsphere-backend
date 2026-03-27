@@ -48,21 +48,21 @@ public class AuthController {
     public ResponseEntity<ApiResponse<UserDTO>> getCurrentUser(
             @RequestHeader(AppConstants.HEADER_USER_ID) String userId,
             @RequestHeader(AppConstants.HEADER_USER_ROLE) String role,
-            @RequestHeader("X-User-Email") String email) {
+            @RequestHeader(AppConstants.HEADER_USER_EMAIL) String email) {
         return ResponseEntity.ok(authService.getCurrentUser(email));
     }
 
     // POST /auth/logout
     @PostMapping("/logout")
     public ResponseEntity<ApiResponse<Void>> logout(
-            @RequestHeader("X-User-Email") String email) {
+            @RequestHeader(AppConstants.HEADER_USER_EMAIL) String email) {
         return ResponseEntity.ok(authService.logout(email));
     }
 
     // PUT /auth/changepassword
     @PutMapping("/changepassword")
     public ResponseEntity<ApiResponse<Void>> changePassword(
-            @RequestHeader("X-User-Email") String email,
+            @RequestHeader(AppConstants.HEADER_USER_EMAIL) String email,
             @Valid @RequestBody ChangePasswordRequest request) {
         return ResponseEntity.ok(authService.changePassword(email, request));
     }

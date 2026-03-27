@@ -1,5 +1,6 @@
 package com.shopsphere.apigateway.filter;
 
+import com.shopsphere.common.constants.AppConstants;
 import com.shopsphere.common.util.JwtUtil;
 
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,7 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
+import java.util.function.Predicate;
 
 @Component
 @RequiredArgsConstructor
@@ -25,13 +27,14 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
 
     private final JwtUtil jwtUtil;
 
-    private static final List<String> PUBLIC_PATHS = List.of(
-            "/gateway/auth/signup",
-            "/gateway/auth/login",
-            "/gateway/auth/refresh",
-            "/gateway/catalog/products",
-            "/gateway/catalog/categories",
-            "/gateway/catalog/featured"
+    private static final List<Predicate<String>> PUBLIC_PATHS = List.of(
+            path -> path.startsWith("/gateway/auth/signup"),
+            path -> path.startsWith("/gateway/auth/login"),
+            path -> path.startsWith("/gateway/auth/refresh"),
+            path -> path.startsWith("/gateway/catalog/products"),
+            path -> path.startsWith("/gateway/catalog/categories"),
+            path -> path.startsWith("/gateway/catalog/featured"),
+            path -> path.startsWith("/actuator/health")
     );
 
     @Override
@@ -66,9 +69,9 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
 
             ServerWebExchange mutatedExchange = exchange.mutate()
                     .request(r -> r.headers(headers -> {
-                        headers.set("X-User-Id",    userId);
-                        headers.set("X-User-Role",  role);
-                        headers.set("X-User-Email", email);
+                        headers.set(AppConstants.HEADER_USER_ID, userId);
+                        headers.set(AppConstants.HEADER_USER_ROLE, role);
+                        headers.set(AppConstants.HEADER_USER_EMAIL, email);
                     }))
                     .build();
 
@@ -87,6 +90,6 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
     }
 
     private boolean isPublicPath(String path) {
-        return PUBLIC_PATHS.stream().anyMatch(path::startsWith);
+        return PUBLIC_PATHS.stream().anyMatch(matcher -> matcher.test(path));
     }
 }

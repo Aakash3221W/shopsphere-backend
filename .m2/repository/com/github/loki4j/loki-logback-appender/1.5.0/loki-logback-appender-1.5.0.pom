@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.github.loki4j</groupId>
+  <artifactId>loki-logback-appender</artifactId>
+  <version>1.5.0</version>
+  <name>Logback Appender for Loki</name>
+  <description>Loki4j aims to be the fastest and the most lightweight implementation of Logback Appender for Loki</description>
+  <url>https://github.com/loki4j/loki-logback-appender</url>
+  <licenses>
+    <license>
+      <name>BSD Software License, 2-clause version</name>
+      <url>https://github.com/loki4j/loki-logback-appender/blob/master/LICENSE.md</url>
+    </license>
+  </licenses>
+  <developers>
+    <developer>
+      <id>nehaev</id>
+      <name>Anton Nehaev</name>
+      <email>nehaev@gmail.com</email>
+    </developer>
+  </developers>
+  <scm>
+    <connection>scm:git:git@github.com/loki4j/loki-logback-appender.git</connection>
+    <developerConnection>scm:git:git@github.com/loki4j/loki-logback-appender.git</developerConnection>
+    <url>https://github.com/loki4j/loki-logback-appender</url>
+  </scm>
+  <dependencies>
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+      <version>1.3.14</version>
+      <scope>compile</scope>
+    </dependency>
+  </dependencies>
+</project>

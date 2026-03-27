@@ -117,10 +117,25 @@
             <artifactId>spring-boot-starter-cache</artifactId>
         </dependency>
 
+<<<<<<< HEAD
         <dependency>
             <groupId>net.logstash.logback</groupId>
             <artifactId>logstash-logback-encoder</artifactId>
             <version>7.4</version>
+=======
+        <!-- Monitoring & Tracing -->
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-tracing-bridge-brave</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.zipkin.reporter2</groupId>
+            <artifactId>zipkin-reporter-brave</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.loki4j</groupId>
+            <artifactId>loki-logback-appender</artifactId>
+>>>>>>> 0a1129c (Complete Project)
         </dependency>
     </dependencies>
 

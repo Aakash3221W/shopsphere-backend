@@ -1,6 +1,31 @@
+<<<<<<< HEAD
 services:
 
   # ─── Infrastructure ───────────────────────────────────────────────────────
+=======
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: shopsphere-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./docker/postgres/init-multiple-dbs.sql:/docker-entrypoint-initdb.d/init-multiple-dbs.sql:ro
+    networks:
+      - shopsphere-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+>>>>>>> 0a1129c (Complete Project)
 
   kafka:
     image: apache/kafka:3.7.0
@@ -29,8 +54,11 @@ services:
       retries: 5
       start_period: 40s
 
+<<<<<<< HEAD
   # ─── Redis ───────────────────────────────────────────────────────────────
 
+=======
+>>>>>>> 0a1129c (Complete Project)
   redis:
     image: redis:7-alpine
     container_name: shopsphere-redis
@@ -44,6 +72,7 @@ services:
       timeout: 5s
       retries: 3
 
+<<<<<<< HEAD
   # ─── Logging (Loki + Grafana) ─────────────────────────────────────────
 
   loki:
@@ -72,16 +101,37 @@ services:
     depends_on:
       loki:
         condition: service_healthy
+=======
+  zipkin:
+    image: openzipkin/zipkin:3
+    container_name: shopsphere-zipkin
+    ports:
+      - "9411:9411"
+    networks:
+      - shopsphere-network
+
+  loki:
+    image: grafana/loki:3.0.0
+    container_name: shopsphere-loki
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/local-config.yaml
+>>>>>>> 0a1129c (Complete Project)
     networks:
       - shopsphere-network
 
   grafana:
+<<<<<<< HEAD
     image: grafana/grafana:11.6.0
+=======
+    image: grafana/grafana:11.0.0
+>>>>>>> 0a1129c (Complete Project)
     container_name: shopsphere-grafana
     ports:
       - "3000:3000"
     environment:
       GF_SECURITY_ADMIN_PASSWORD: admin
+<<<<<<< HEAD
       GF_USERS_ALLOW_SIGN_UP: "false"
     volumes:
       - ./grafana/provisioning:/etc/grafana/provisioning:ro
@@ -92,6 +142,22 @@ services:
       - shopsphere-network
 
   # ─── Spring Cloud ─────────────────────────────────────────────────────────
+=======
+    volumes:
+      - ./docker/grafana/provisioning:/etc/grafana/provisioning:ro
+    networks:
+      - shopsphere-network
+    depends_on:
+      - loki
+
+  prometheus:
+    image: prom/prometheus:v2.52.0
+    container_name: shopsphere-prometheus
+    ports:
+      - "9090:9090"
+    networks:
+      - shopsphere-network
+>>>>>>> 0a1129c (Complete Project)
 
   eureka-server:
     build: ./eureka-server
@@ -124,8 +190,11 @@ services:
       timeout: 10s
       retries: 5
 
+<<<<<<< HEAD
   # ─── Services ─────────────────────────────────────────────────────────────
 
+=======
+>>>>>>> 0a1129c (Complete Project)
   auth-service:
     build: ./auth-service
     container_name: shopsphere-auth
@@ -134,6 +203,11 @@ services:
     networks:
       - shopsphere-network
     depends_on:
+<<<<<<< HEAD
+=======
+      postgres:
+        condition: service_healthy
+>>>>>>> 0a1129c (Complete Project)
       redis:
         condition: service_healthy
       config-server:
@@ -141,6 +215,7 @@ services:
       eureka-server:
         condition: service_healthy
     environment:
+<<<<<<< HEAD
       SPRING_CONFIG_IMPORT: "optional:configserver:http://config-server:8888"
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
       SPRING_DATASOURCE_URL: jdbc:postgresql://host.docker.internal:5432/auth_db
@@ -151,6 +226,15 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
+=======
+      SPRING_CONFIG_IMPORT: optional:configserver:http://config-server:8888
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/auth_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: 6379
+>>>>>>> 0a1129c (Complete Project)
 
   catalog-service:
     build: ./catalog-service
@@ -160,6 +244,11 @@ services:
     networks:
       - shopsphere-network
     depends_on:
+<<<<<<< HEAD
+=======
+      postgres:
+        condition: service_healthy
+>>>>>>> 0a1129c (Complete Project)
       redis:
         condition: service_healthy
       config-server:
@@ -169,6 +258,7 @@ services:
       kafka:
         condition: service_healthy
     environment:
+<<<<<<< HEAD
       SPRING_CONFIG_IMPORT: "optional:configserver:http://config-server:8888"
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
       SPRING_DATASOURCE_URL: jdbc:postgresql://host.docker.internal:5432/catalog_db
@@ -180,6 +270,16 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
+=======
+      SPRING_CONFIG_IMPORT: optional:configserver:http://config-server:8888
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/catalog_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: 6379
+>>>>>>> 0a1129c (Complete Project)
 
   order-service:
     build: ./order-service
@@ -189,6 +289,11 @@ services:
     networks:
       - shopsphere-network
     depends_on:
+<<<<<<< HEAD
+=======
+      postgres:
+        condition: service_healthy
+>>>>>>> 0a1129c (Complete Project)
       redis:
         condition: service_healthy
       config-server:
@@ -198,6 +303,7 @@ services:
       kafka:
         condition: service_healthy
     environment:
+<<<<<<< HEAD
       SPRING_CONFIG_IMPORT: "optional:configserver:http://config-server:8888"
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
       SPRING_DATASOURCE_URL: jdbc:postgresql://host.docker.internal:5432/order_db
@@ -209,6 +315,16 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
+=======
+      SPRING_CONFIG_IMPORT: optional:configserver:http://config-server:8888
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/order_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: 6379
+>>>>>>> 0a1129c (Complete Project)
 
   admin-service:
     build: ./admin-service
@@ -218,6 +334,11 @@ services:
     networks:
       - shopsphere-network
     depends_on:
+<<<<<<< HEAD
+=======
+      postgres:
+        condition: service_healthy
+>>>>>>> 0a1129c (Complete Project)
       redis:
         condition: service_healthy
       config-server:
@@ -225,6 +346,7 @@ services:
       eureka-server:
         condition: service_healthy
     environment:
+<<<<<<< HEAD
       SPRING_CONFIG_IMPORT: "optional:configserver:http://config-server:8888"
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
       SPRING_DATASOURCE_URL: jdbc:postgresql://host.docker.internal:5432/admin_db
@@ -235,6 +357,15 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
+=======
+      SPRING_CONFIG_IMPORT: optional:configserver:http://config-server:8888
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/admin_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: 6379
+>>>>>>> 0a1129c (Complete Project)
 
   api-gateway:
     build: ./api-gateway
@@ -249,6 +380,7 @@ services:
       config-server:
         condition: service_healthy
     environment:
+<<<<<<< HEAD
       SPRING_CONFIG_IMPORT: "optional:configserver:http://config-server:8888"
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
     logging:
@@ -258,7 +390,17 @@ services:
         max-file: "3"
 
 # ─── Networks ─────────────────────────────────────────────────────────────
+=======
+      SPRING_CONFIG_IMPORT: optional:configserver:http://config-server:8888
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+>>>>>>> 0a1129c (Complete Project)
 
 networks:
   shopsphere-network:
     driver: bridge
+<<<<<<< HEAD
+=======
+
+volumes:
+  postgres-data:
+>>>>>>> 0a1129c (Complete Project)
