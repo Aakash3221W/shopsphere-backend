@@ -13,7 +13,7 @@ spring:
           search-locations: file:/config-repo
 
 encrypt:
-  key: ShopSphere@SecretEncryptionKey2024!
+  key: {Write your Key Here}
 
 eureka:
   client:
