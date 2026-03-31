@@ -66,6 +66,18 @@ public class AuthController {
             @Valid @RequestBody ChangePasswordRequest request) {
         return ResponseEntity.ok(authService.changePassword(email, request));
     }
+
+    @PostMapping("/password/otp/request")
+    public ResponseEntity<ApiResponse<Void>> requestPasswordResetOtp(
+            @Valid @RequestBody PasswordOtpRequest request) {
+        return ResponseEntity.ok(authService.requestPasswordResetOtp(request));
+    }
+
+    @PostMapping("/password/otp/reset")
+    public ResponseEntity<ApiResponse<Void>> resetPasswordWithOtp(
+            @Valid @RequestBody PasswordResetRequest request) {
+        return ResponseEntity.ok(authService.resetPasswordWithOtp(request));
+    }
     
     // GET /auth/users — Admin only, called by Admin Service via Feign
     @GetMapping("/users")

@@ -1,19 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
     <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
-<<<<<<< HEAD
-    
-    <property name="LOG_SERVICE" value="${spring.application.name:-auth-service}"/>
-    
-    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
-            <customFields>{"service":"${LOG_SERVICE}"}</customFields>
-        </encoder>
-    </appender>
-    
-    <root level="INFO">
-        <appender-ref ref="CONSOLE"/>
-=======
     <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
 
     <springProperty scope="context" name="appName" source="spring.application.name"/>
@@ -36,6 +23,5 @@
     <root level="INFO">
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="LOKI"/>
->>>>>>> 0a1129c (Complete Project)
     </root>
 </configuration>

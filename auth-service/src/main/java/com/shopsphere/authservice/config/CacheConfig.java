@@ -1,12 +1,9 @@
 package com.shopsphere.authservice.config;
 
-<<<<<<< HEAD
-=======
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
->>>>>>> 0a1129c (Complete Project)
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
@@ -28,21 +25,14 @@ public class CacheConfig {
 
     @Bean
     public CacheManager cacheManager(RedisConnectionFactory connectionFactory) {
-<<<<<<< HEAD
-=======
         GenericJackson2JsonRedisSerializer serializer =
                 new GenericJackson2JsonRedisSerializer(objectMapper());
->>>>>>> 0a1129c (Complete Project)
         RedisCacheConfiguration defaultConfig = RedisCacheConfiguration.defaultCacheConfig()
                 .entryTtl(Duration.ofMinutes(5))
                 .serializeKeysWith(RedisSerializationContext.SerializationPair
                         .fromSerializer(new StringRedisSerializer()))
                 .serializeValuesWith(RedisSerializationContext.SerializationPair
-<<<<<<< HEAD
-                        .fromSerializer(new GenericJackson2JsonRedisSerializer()))
-=======
                         .fromSerializer(serializer))
->>>>>>> 0a1129c (Complete Project)
                 .disableCachingNullValues();
 
         Map<String, RedisCacheConfiguration> cacheConfigurations = new HashMap<>();
@@ -56,8 +46,6 @@ public class CacheConfig {
                 .withInitialCacheConfigurations(cacheConfigurations)
                 .build();
     }
-<<<<<<< HEAD
-=======
 
     private ObjectMapper objectMapper() {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -71,5 +59,4 @@ public class CacheConfig {
         );
         return objectMapper;
     }
->>>>>>> 0a1129c (Complete Project)
 }

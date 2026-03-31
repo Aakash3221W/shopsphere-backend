@@ -147,8 +147,6 @@
             </dependency>
 
             <dependency>
-<<<<<<< HEAD
-=======
                 <groupId>org.springframework.security</groupId>
                 <artifactId>spring-security-test</artifactId>
                 <version>6.2.4</version>
@@ -156,13 +154,10 @@
             </dependency>
 
             <dependency>
->>>>>>> 0a1129c (Complete Project)
                 <groupId>org.springdoc</groupId>
                 <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
                 <version>2.3.0</version>
             </dependency>
-<<<<<<< HEAD
-=======
 
             <!-- OpenFeign -->
             <dependency>
@@ -189,7 +184,6 @@
                 <artifactId>loki-logback-appender</artifactId>
                 <version>1.5.0</version>
             </dependency>
->>>>>>> 0a1129c (Complete Project)
         </dependencies>
     </dependencyManagement>
 
