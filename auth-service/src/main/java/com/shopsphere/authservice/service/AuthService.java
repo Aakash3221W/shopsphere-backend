@@ -11,6 +11,7 @@ import com.shopsphere.common.dto.UserDTO;
 import com.shopsphere.common.exception.BadRequestException;
 import com.shopsphere.common.exception.ConflictException;
 import com.shopsphere.common.exception.ResourceNotFoundException;
+import com.shopsphere.common.exception.ServiceUnavailableException;
 import com.shopsphere.common.exception.UnauthorizedException;
 import com.shopsphere.common.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +38,8 @@ public class AuthService {
     private final RefreshTokenRepository refreshTokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
+    private final EmailService emailService;
+    private final PasswordOtpService passwordOtpService;
 
     // ─── Signup ──────────────────────────────────────────────────────────────
 
@@ -58,6 +61,12 @@ public class AuthService {
 
         User saved = userRepository.save(user);
         log.info("New user registered: {}", saved.getEmail());
+        try {
+            emailService.sendWelcomeEmail(saved);
+        } catch (ServiceUnavailableException ex) {
+            log.warn("User registered but welcome email could not be sent for {}",
+                    saved.getEmail());
+        }
 
         return ApiResponse.success("User registered successfully", toDTO(saved));
     }
@@ -174,6 +183,40 @@ public class AuthService {
 
         log.info("Password changed for user: {}", email);
         return ApiResponse.success("Password changed successfully", null);
+    }
+
+    public ApiResponse<Void> requestPasswordResetOtp(PasswordOtpRequest request) {
+        userRepository.findByEmail(request.getEmail())
+                .ifPresent(user -> {
+                    String otp = passwordOtpService.generateAndStoreOtp(
+                            user.getEmail());
+                    emailService.sendPasswordResetOtp(user.getEmail(), otp);
+                    log.info("Password reset OTP generated for user: {}",
+                            user.getEmail());
+                });
+
+        return ApiResponse.success(
+                "If the email is registered, an OTP has been sent.", null);
+    }
+
+    @Transactional
+    @CacheEvict(value = "currentUser", key = "#request.email")
+    public ApiResponse<Void> resetPasswordWithOtp(PasswordResetRequest request) {
+        User user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new BadRequestException("Invalid OTP or email"));
+
+        if (!passwordOtpService.matches(user.getEmail(), request.getOtp())) {
+            throw new BadRequestException("Invalid OTP or email");
+        }
+
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        userRepository.save(user);
+        refreshTokenRepository.revokeAllUserTokens(user);
+        passwordOtpService.clear(user.getEmail());
+
+        log.info("Password reset completed using OTP for user: {}",
+                user.getEmail());
+        return ApiResponse.success("Password reset successfully", null);
     }
 
     // ─── Helper ──────────────────────────────────────────────────────────────

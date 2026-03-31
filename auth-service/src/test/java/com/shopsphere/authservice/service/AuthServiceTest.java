@@ -42,6 +42,8 @@ class AuthServiceTest {
     @Mock private RefreshTokenRepository refreshTokenRepository;
     @Mock private PasswordEncoder passwordEncoder;
     @Mock private JwtUtil jwtUtil;
+    @Mock private EmailService emailService;
+    @Mock private PasswordOtpService passwordOtpService;
 
     @InjectMocks
     private AuthService authService;
@@ -87,6 +89,7 @@ class AuthServiceTest {
         assertThat(response.isSuccess()).isTrue();
         assertThat(response.getData().getEmail()).isEqualTo("test@shopsphere.com");
         verify(userRepository).save(any(User.class));
+        verify(emailService).sendWelcomeEmail(testUser);
     }
 
     @Test
@@ -224,6 +227,74 @@ class AuthServiceTest {
         assertThatThrownBy(() -> authService.changePassword("unknown@email.com", request))
                 .isInstanceOf(ResourceNotFoundException.class)
                 .hasMessageContaining("not found");
+    }
+
+    @Test
+    @DisplayName("Request Password Reset OTP — success for known user")
+    void requestPasswordResetOtp_knownUser_sendsOtp() {
+        PasswordOtpRequest request = new PasswordOtpRequest();
+        request.setEmail(testUser.getEmail());
+
+        when(userRepository.findByEmail(testUser.getEmail()))
+                .thenReturn(Optional.of(testUser));
+        when(passwordOtpService.generateAndStoreOtp(testUser.getEmail()))
+                .thenReturn("123456");
+
+        ApiResponse<Void> response = authService.requestPasswordResetOtp(request);
+
+        assertThat(response.isSuccess()).isTrue();
+        verify(emailService).sendPasswordResetOtp(testUser.getEmail(), "123456");
+    }
+
+    @Test
+    @DisplayName("Request Password Reset OTP — success for unknown user without sending mail")
+    void requestPasswordResetOtp_unknownUser_isGeneric() {
+        PasswordOtpRequest request = new PasswordOtpRequest();
+        request.setEmail("missing@shopsphere.com");
+
+        when(userRepository.findByEmail(request.getEmail())).thenReturn(Optional.empty());
+
+        ApiResponse<Void> response = authService.requestPasswordResetOtp(request);
+
+        assertThat(response.isSuccess()).isTrue();
+        verify(passwordOtpService, never()).generateAndStoreOtp(anyString());
+        verify(emailService, never()).sendPasswordResetOtp(anyString(), anyString());
+    }
+
+    @Test
+    @DisplayName("Reset Password With OTP — success")
+    void resetPasswordWithOtp_success() {
+        PasswordResetRequest request = new PasswordResetRequest();
+        request.setEmail(testUser.getEmail());
+        request.setOtp("123456");
+        request.setNewPassword("newPassword123");
+
+        when(userRepository.findByEmail(testUser.getEmail())).thenReturn(Optional.of(testUser));
+        when(passwordOtpService.matches(testUser.getEmail(), "123456")).thenReturn(true);
+        when(passwordEncoder.encode(request.getNewPassword())).thenReturn("newEncodedPassword");
+
+        ApiResponse<Void> response = authService.resetPasswordWithOtp(request);
+
+        assertThat(response.isSuccess()).isTrue();
+        verify(userRepository).save(any(User.class));
+        verify(refreshTokenRepository).revokeAllUserTokens(testUser);
+        verify(passwordOtpService).clear(testUser.getEmail());
+    }
+
+    @Test
+    @DisplayName("Reset Password With OTP — throws BadRequestException for invalid otp")
+    void resetPasswordWithOtp_invalidOtp_throwsBadRequest() {
+        PasswordResetRequest request = new PasswordResetRequest();
+        request.setEmail(testUser.getEmail());
+        request.setOtp("000000");
+        request.setNewPassword("newPassword123");
+
+        when(userRepository.findByEmail(testUser.getEmail())).thenReturn(Optional.of(testUser));
+        when(passwordOtpService.matches(testUser.getEmail(), "000000")).thenReturn(false);
+
+        assertThatThrownBy(() -> authService.resetPasswordWithOtp(request))
+                .isInstanceOf(BadRequestException.class)
+                .hasMessageContaining("Invalid OTP or email");
     }
 
     // ─── Refresh Token Tests ──────────────────────────────────────────────────
